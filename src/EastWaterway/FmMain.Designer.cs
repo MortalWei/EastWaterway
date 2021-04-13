@@ -182,7 +182,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(578, 446);
             this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.richTextBox1.Text = "系统测试222\n5000\n测试出发\n测试到达\n散装\n内河\n4.14\n4.14\n7天\n系统测试\n15821352721\n备注阿道夫\n阿道夫ac\n";
             // 
             // panel2
             // 
