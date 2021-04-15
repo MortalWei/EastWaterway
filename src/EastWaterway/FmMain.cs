@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
 
 namespace EastWaterway
 {
     public partial class FmMain : Form
     {
-        JObject Cookie { get; set; }
 
         JObject DataSource { get; set; }
 
@@ -27,10 +16,13 @@ namespace EastWaterway
 
         object bLock = new object();
 
+        WebApiClient ApiClient { get; set; }
+
         public FmMain()
         {
             InitializeComponent();
             toolStripTextBox2.TextBox.PasswordChar = '*';
+            ApiClient = new WebApiClient();
         }
 
         private void tsBtnLogin_Click(object sender, EventArgs e)
@@ -44,14 +36,14 @@ namespace EastWaterway
 
                 if (string.IsNullOrEmpty(userName))
                 {
-                    FunMsg.Warn("请输入用户名");
+                    FuncMsg.Warn("请输入用户名");
                     toolStripTextBox1.Focus();
                     return;
                 }
 
                 else if (string.IsNullOrEmpty(userPWD))
                 {
-                    FunMsg.Warn("请输入密码");
+                    FuncMsg.Warn("请输入密码");
                     toolStripTextBox2.Focus();
                     return;
                 }
@@ -68,21 +60,11 @@ namespace EastWaterway
         {
             var baseUrl = "http://www.012395.com/e/enews/index.php";
 
-            List<Tuple<string, string>> list = new List<Tuple<string, string>>();
-            list.Add(new Tuple<string, string>("ecmsfrom", ""));
-            list.Add(new Tuple<string, string>("enews", "login"));
-            list.Add(new Tuple<string, string>("username", userName));
-            list.Add(new Tuple<string, string>("password", userPWD));
-            list.Add(new Tuple<string, string>("lifetime", "0"));
-            list.Add(new Tuple<string, string>("登录", ""));
-            list.Add(new Tuple<string, string>("ecmsfrom", "../member/cp/"));
-
-            var response = HttpHelper.PostApiNew(baseUrl, "", list);
-
+            var response = ApiClient.Login(baseUrl, userName, userPWD);
 
             if (response == "登录失败")
             {
-                FunMsg.Error("登录失败");
+                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
                 return;
             }
 
@@ -99,61 +81,10 @@ namespace EastWaterway
                 }
                 else
                 {
-                    FunMsg.Error(msg);
+                    FuncMsg.Error(msg);
                     return;
                 }
             }
-
-            //if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            //{
-            //    FunMsg.Error(response.ErrorMessage);
-            //    return;
-            //}
-
-            //var xmlDoc = new System.Xml.XmlDocument();
-
-            //var start = response.Content.IndexOf("<table");
-            //var end = response.Content.IndexOf("</table>");
-
-            //var num = end - start + 8;
-            //var xmlStr = response.Content.Substring(start, num);
-            //xmlStr = xmlStr.Replace("<br>", "");
-            //xmlDoc.LoadXml(xmlStr);
-            //var node = xmlDoc.SelectSingleNode("//b");
-
-            //if (node != null)
-            //{
-            //    var str = node.InnerText;
-            //    if (str.Equals(SuccessStr))
-            //    {
-            //        SetCookie(response.Cookies.ToList());
-            //        OpenEditor();
-            //    }
-            //    else
-            //    {
-            //        FunMsg.Error(str);
-            //        return;
-            //    }
-            //}
-            //else
-            //{
-            //    FunMsg.Error("服务端数据结构变更，需要更新客户端。");
-            //    return;
-            //}
-        }
-
-        private void SetCookie(List<RestResponseCookie> list)
-        {
-            Cookie = new JObject();
-            var num = 0;
-            list.ForEach(c =>
-            {
-                if (num > 0)
-                {
-                    Cookie.Add(c.Name, c.Value);
-                }
-                num++;
-            });
         }
 
         private void OpenEditor()
@@ -183,61 +114,215 @@ namespace EastWaterway
         {
             if (string.IsNullOrWhiteSpace(richTextBox1.Text))
             {
-                FunMsg.Warn("请输入要发布的内容");
+                FuncMsg.Warn("请输入要发布的内容");
                 return;
             };
 
             var orders = richTextBox1.Text.Split('\n');
-
             if (orders.Length < 12)
             {
-                FunMsg.Warn("数据填写不全，请补全后重新提交！");
+                FuncMsg.Warn("数据填写不全，请补全后重新提交！");
                 return;
             }
             DataSource = new JObject();
+
+            var baseUrl = "http://www.012395.com/e/DoInfo/AddInfo.php?mid=15&enews=MAddInfo&classid=115&Submit=%E6%B7%BB%E5%8A%A0%E4%BF%A1%E6%81%AF";
+
+            var response = ApiClient.AddInfo(baseUrl);
+
+            if (response == "添加失败")
+            {
+                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
+                return;
+            }
+
+            HtmlAgilityPack.HtmlDocument html = new HtmlAgilityPack.HtmlDocument();
+            html.LoadHtml(response);
+
+            if (!IsLogin(html)) return;
+
+            DataSource.Add("enews", GetNodeVal(html, "enews"));
+            DataSource.Add("classid", GetNodeVal(html, "classid"));
+            DataSource.Add("id", "");
+            DataSource.Add("filepass", GetNodeVal(html, "filepass"));
+            DataSource.Add("mid", "15");
+            DataSource.Add("tokenid", "");
 
             if (chkSimple.Checked)
                 SimpleModel(orders);
             else
                 StandardModel(orders);
 
-            var basrUrl = "http://www.012395.com/e/DoInfo/AddInfo.php?mid=15&enews=MAddInfo&classid=115&Submit=%E6%B7%BB%E5%8A%A0%E4%BF%A1%E6%81%AF";
-
-            var response = HttpHelper.GetApiNew(basrUrl);
-
-            if (response == "添加失败")
-            {
-                FunMsg.Error("添加失败\r\n服务端异常，请稍后再试.");
-                return;
-            }
-
-            //TODO:Add faild process
-
-            HtmlAgilityPack.HtmlDocument html = new HtmlAgilityPack.HtmlDocument();
-            html.LoadHtml(response);
-
-            DataSource.Add("enews", GetNodeVal(html, "enews"));
-            DataSource.Add("classid", GetNodeVal(html, "classid"));
-            DataSource.Add("id", GetNodeValOfId(html, "id"));
-            DataSource.Add("filepass", GetNodeVal(html, "filepass"));
-            DataSource.Add("mid", GetNodeValOfId(html, "mid"));
-            DataSource.Add("tokenid", GetNodeVal(html, "tokenid"));
-
             var postUrl = "http://www.012395.com/e/DoInfo/ecms.php";
-                                 
-            var result = HttpHelper.PostFormApi(postUrl, Cookie, DataSource);
 
-            var strin = JsonConvert.SerializeObject(DataSource);
+            var result = ApiClient.SaveInfo(postUrl, DataSource);
 
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            if (IsSuccess(result))
             {
 
             }
         }
 
+        /// <summary>
+        /// 是否成功
+        /// </summary>
+        /// <param name="htmlStr"></param>
+        /// <returns></returns>
+        private bool IsSuccess(string htmlStr)
+        {
+            if (htmlStr == "添加失败")
+            {
+                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
+                return false;
+            }
+
+            var html = new HtmlAgilityPack.HtmlDocument();
+            html.LoadHtml(htmlStr);
+            var node = html.DocumentNode.SelectSingleNode("//title");
+            if (node != null)
+            {
+                var title = node.InnerText;
+                if (title == "信息提示")
+                {
+                    node = html.DocumentNode.SelectSingleNode("//b");
+                    if (node != null)
+                    {
+                        var msg = node.InnerText;
+                        if (msg == "提交信息成功")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            FuncMsg.Error(msg);
+                            return false;
+                        }
+                    }
+                }
+            }
+            FuncMsg.Error("其它错误,请稍后重试。");
+            return false;
+        }
+
+        private bool IsLogin(HtmlAgilityPack.HtmlDocument html)
+        {
+            var node = html.DocumentNode.SelectSingleNode("//title");
+            if (node != null)
+            {
+                var title = node.InnerText;
+                if (title == "信息提示")
+                {
+                    node = html.DocumentNode.SelectSingleNode("//b");
+                    var msg = "您的账号在其它地方登录，请重新登录后重新发布";
+                    if (node != null)
+                    {
+                        msg = node.InnerText + "\r\n请重新登录后再次发布";
+                    }
+                    FuncMsg.Error(msg);
+                    groupBox2.Enabled = false;
+                    toolStripTextBox1.Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 是否切换模式
+        /// </summary>
+        /// <returns></returns>
+        private bool IsSwitch()
+        {
+            return FuncMsg.YesNo("切换模式当清空当前已经填写的内容\r\n您确定要切换吗？");
+        }
+
+        /// <summary>
+        /// 切换成标准模式
+        /// </summary>
+        private void SwitchStandardModel()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("货源名称| ");
+            sb.AppendLine("货物吨位| ");
+            sb.AppendLine("发出地(港)| ");
+            sb.AppendLine("到达地(港)| ");
+            sb.AppendLine("包装形式| 散装");
+            sb.AppendLine("航运类型| 内河");
+            sb.AppendLine("装运期限(开始)| " + DateTime.Now.ToString("M.d"));
+            sb.AppendLine("装运期限(结束)| " + DateTime.Now.ToString("M.d"));
+            sb.AppendLine("有效期| 7天");
+            sb.AppendLine("联系人| ");
+            sb.AppendLine("联系电话| ");
+            sb.AppendLine("联系备注| ");
+            richTextBox1.Text = sb.ToString();
+            richTextBox1.SelectionStart = 6;
+            richTextBox1.Focus();
+        }
+
         private void StandardModel(string[] orders)
         {
-            throw new NotImplementedException();
+            // 名称
+            DataSource.Add("title", GetStandardVal(orders[0]));
+            // 吨位
+            DataSource.Add("h_dunwei", GetStandardVal(orders[1]));
+            // 发出地
+            DataSource.Add("h_fachu", GetStandardVal(orders[2]));
+            // 到达地
+            DataSource.Add("h_daoda", GetStandardVal(orders[3]));
+            // 包装
+            DataSource.Add("h_xings", GetStandardVal(orders[4]));
+            // 哪条水路
+            DataSource.Add("h_leix", GetStandardVal(orders[5]));
+            // 月
+            DataSource.Add("h_yue", GetStandardVal(orders[6]).Split('.')[0]);
+            // 日
+            DataSource.Add("h_ri", GetStandardVal(orders[6]).Split('.')[1]);
+            // 月
+            DataSource.Add("h_yue1", GetStandardVal(orders[7]).Split('.')[0]);
+            // 日
+            DataSource.Add("h_ri1", GetStandardVal(orders[7]).Split('.')[1]);
+            // 有效期
+            DataSource.Add("h_xiaoqi", GetStandardVal(orders[8]));
+            // 联系人
+            DataSource.Add("hy_lxr", GetStandardVal(orders[9]));
+            // 电话
+            DataSource.Add("hy_lxdh", GetStandardVal(orders[10]));
+            // 备注
+            var remark = "";
+            for (int i = 11; i < orders.Length; i++)
+            {
+                if (i == 11)
+                    remark += GetStandardVal(orders[i]);
+                remark += orders[i];
+            }
+            DataSource.Add("h_conter", remark);
+        }
+
+        /// <summary>
+        /// 获取标准模式的值
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private string GetStandardVal(string args)
+        {
+            var arr = args.Split('|');
+            if (arr.Length == 2)
+            {
+                return arr[1].TrimStart();
+            }
+            else
+            {
+                throw new Exception($"{args}内容格式不正确,应该为：[名称| 内容]");
+            }
+        }
+
+
+        /// <summary>
+        /// 切换成简单模式
+        /// </summary>
+        private void SwitchSimpleModel()
+        {
+            richTextBox1.Text = "";
         }
 
         private void SimpleModel(string[] orders)
@@ -284,11 +369,18 @@ namespace EastWaterway
             return arr[3];
         }
 
-        private string GetNodeValOfId(HtmlAgilityPack.HtmlDocument html, string args)
+        private void chkSimple_CheckedChanged(object sender, EventArgs e)
         {
-            var node = html.GetElementbyId(args);
-            var arr = node.OuterHtml.Split('"');
-            return arr[3];
+            if (!IsSwitch()) return;
+            if (chkSimple.Checked)
+            {
+                SwitchSimpleModel();
+            }
+            else
+            {
+                SwitchStandardModel();
+            }
         }
+
     }
 }
