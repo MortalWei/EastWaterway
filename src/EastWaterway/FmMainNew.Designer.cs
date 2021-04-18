@@ -1,6 +1,6 @@
 ﻿namespace EastWaterway
 {
-    partial class FmMain
+    partial class FmMainNew
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FmMainNew));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
@@ -48,12 +48,11 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.chkSimple = new System.Windows.Forms.CheckBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.chkEdit = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -91,7 +90,6 @@
             // 
             // toolStripTextBox1
             // 
-            this.toolStripTextBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(116, 27);
             // 
@@ -108,7 +106,6 @@
             // 
             // toolStripTextBox2
             // 
-            this.toolStripTextBox2.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
             this.toolStripTextBox2.Name = "toolStripTextBox2";
             this.toolStripTextBox2.Size = new System.Drawing.Size(116, 27);
             // 
@@ -229,6 +226,7 @@
             this.richTextBox2.Size = new System.Drawing.Size(94, 435);
             this.richTextBox2.TabIndex = 1;
             this.richTextBox2.Text = "货源名称\n货物吨位\n出发地(港)\n达到地(港)\n包装形式\n航运类型\n开始时间\n结束时间\n有效期\n联系人\n联系电话\n备注";
+            this.richTextBox2.Visible = false;
             // 
             // panel2
             // 
@@ -240,6 +238,26 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(545, 47);
             this.panel2.TabIndex = 1;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(269, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(131, 47);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "货源模板2发布(&2)";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(132, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(131, 47);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "货源模板1发布(&1)";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnSave
             // 
@@ -254,7 +272,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.chkEdit);
             this.panel1.Controls.Add(this.chkSimple);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 19);
@@ -262,56 +279,20 @@
             this.panel1.Padding = new System.Windows.Forms.Padding(9, 3, 9, 3);
             this.panel1.Size = new System.Drawing.Size(545, 30);
             this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // chkSimple
             // 
             this.chkSimple.AutoSize = true;
-            this.chkSimple.Checked = true;
-            this.chkSimple.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSimple.Dock = System.Windows.Forms.DockStyle.Left;
             this.chkSimple.Location = new System.Drawing.Point(9, 3);
             this.chkSimple.Name = "chkSimple";
             this.chkSimple.Size = new System.Drawing.Size(82, 24);
             this.chkSimple.TabIndex = 0;
-            this.chkSimple.Text = "简洁模式";
+            this.chkSimple.Text = "录入模式";
             this.chkSimple.UseVisualStyleBackColor = true;
-            this.chkSimple.Visible = false;
             this.chkSimple.CheckedChanged += new System.EventHandler(this.chkSimple_CheckedChanged);
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(269, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(131, 47);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "货源2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(132, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(131, 47);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "货源1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // chkEdit
-            // 
-            this.chkEdit.AutoSize = true;
-            this.chkEdit.Dock = System.Windows.Forms.DockStyle.Left;
-            this.chkEdit.Location = new System.Drawing.Point(91, 3);
-            this.chkEdit.Name = "chkEdit";
-            this.chkEdit.Size = new System.Drawing.Size(82, 24);
-            this.chkEdit.TabIndex = 1;
-            this.chkEdit.Text = "录入模式";
-            this.chkEdit.UseVisualStyleBackColor = true;
-            this.chkEdit.CheckedChanged += new System.EventHandler(this.chkEdit_CheckedChanged);
-            // 
-            // FmMain
+            // FmMainNew
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -321,7 +302,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FmMain";
+            this.Name = "FmMainNew";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "华东水运货源信息发布";
             this.Load += new System.EventHandler(this.FmMain_Load);
@@ -364,7 +345,6 @@
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox chkEdit;
     }
 }
 

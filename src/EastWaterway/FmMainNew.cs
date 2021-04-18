@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace EastWaterway
 {
-    public partial class FmMain : Form
+    public partial class FmMainNew : Form
     {
 
         JObject DataSource { get; set; }
@@ -18,10 +18,29 @@ namespace EastWaterway
         object bLock = new object();
 
         string m_Mode = "普通模式";
+        string Mode
+        {
+            get { return m_Mode; }
+            set
+            {
+                switch (value)
+                {
+                    case "普通模式":
+                        //radioButton1.Checked = true;
+                        break;
+                    case "简洁模式":
+                        //radioButton2.Checked = true;
+                        break;
+                    case "标准模式":
+                        //radioButton3.Checked = true;
+                        break;
+                }
+            }
+        }
 
         WebApiClient ApiClient { get; set; }
 
-        public FmMain()
+        public FmMainNew()
         {
             InitializeComponent();
             toolStripTextBox2.TextBox.PasswordChar = '*';
@@ -183,14 +202,18 @@ namespace EastWaterway
                 return;
             };
 
-            var orders = richTextBox1.Text.Split('\n');
-            if (orders.Length < 12)
+            //if (chkSimple.Checked)
+            //{
+            if (OnSave(richTextBox1.Text))
             {
-                FuncMsg.Warn("数据填写不全，请补全后重新提交！");
-                return;
+                RefreshLately();
+                richTextBox1.Text = "";
             }
-            DataSource = new JObject();
+            //}
+        }
 
+        private bool InitSave()
+        {
             var baseUrl = "http://www.012395.com/e/DoInfo/AddInfo.php?mid=15&enews=MAddInfo&classid=115&Submit=%E6%B7%BB%E5%8A%A0%E4%BF%A1%E6%81%AF";
 
             var response = ApiClient.AddInfo(baseUrl);
@@ -198,13 +221,13 @@ namespace EastWaterway
             if (response == FuncConst.AddErr)
             {
                 FuncMsg.Error($"{FuncConst.AddErr}\r\n{FuncConst.NetworkErr}");
-                return;
+                return false;
             }
 
             HtmlAgilityPack.HtmlDocument html = new HtmlAgilityPack.HtmlDocument();
             html.LoadHtml(response);
 
-            if (!IsLogin(html)) return;
+            if (!IsLogin(html)) return false;
 
             DataSource.Add("enews", GetNodeVal(html, "enews"));
             DataSource.Add("classid", GetNodeVal(html, "classid"));
@@ -212,12 +235,32 @@ namespace EastWaterway
             DataSource.Add("filepass", GetNodeVal(html, "filepass"));
             DataSource.Add("mid", "15");
             DataSource.Add("tokenid", "");
+            return true;
+        }
+
+        private bool OnSave(string args)
+        {
+            var orders = args.Split('\n');
+            if (orders.Length < 12)
+            {
+                FuncMsg.Warn("数据填写不全，请补全后重新提交！");
+                return false;
+            }
+
+            DataSource = new JObject();
+
+            if (!InitSave()) return false;
 
             if (chkSimple.Checked)
                 SimpleModel(orders);
             else
                 StandardModel(orders);
 
+            return OnCallSave();
+        }
+
+        private bool OnCallSave()
+        {
             var postUrl = "http://www.012395.com/e/DoInfo/ecms.php";
 
             var result = ApiClient.SaveInfo(postUrl, DataSource);
@@ -225,17 +268,11 @@ namespace EastWaterway
             if (IsSuccess(result))
             {
                 FuncMsg.Info($"货源信息：[{DataSource["title"].ToString()}]发布成功!");
-                RefreshLately();
-                if (chkSimple.Checked)
-                {
-                    richTextBox2.Visible = true;
-                    SwitchSimpleModel();
-                }
-                else
-                {
-                    richTextBox2.Visible = false;
-                    SwitchStandardModel();
-                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -312,29 +349,6 @@ namespace EastWaterway
             return FuncMsg.YesNo("切换模式当清空当前已经填写的内容\r\n您确定要切换吗？");
         }
 
-        /// <summary>
-        /// 切换成标准模式
-        /// </summary>
-        private void SwitchStandardModel()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("货源名称| ");
-            sb.AppendLine("货物吨位| ");
-            sb.AppendLine("发出地(港)| ");
-            sb.AppendLine("到达地(港)| ");
-            sb.AppendLine("包装形式| 散装");
-            sb.AppendLine("航运类型| 内河");
-            sb.AppendLine("装运期限(开始)| " + DateTime.Now.ToString("M.d"));
-            sb.AppendLine("装运期限(结束)| " + DateTime.Now.ToString("M.d"));
-            sb.AppendLine("有效期| 7天");
-            sb.AppendLine("联系人| ");
-            sb.AppendLine("联系电话| ");
-            sb.AppendLine("联系备注| ");
-            richTextBox1.Text = sb.ToString();
-            richTextBox1.SelectionStart = 6;
-            richTextBox1.Focus();
-        }
-
         private void StandardModel(string[] orders)
         {
             // 名称
@@ -392,42 +406,6 @@ namespace EastWaterway
             }
         }
 
-
-        /// <summary>
-        /// 切换成普通模式
-        /// </summary>
-        private void SwitchGenealModel()
-        {
-            richTextBox1.Text = "";
-        }
-
-        /// <summary>
-        /// 普通模式
-        /// </summary>
-        private void GeneralModel(string args)
-        {
-            /*货源名称煤炭航线类别长江-内河所需船型单机货物吨位5700发出港镇江　到达港芜湖　发布时间2021-03-19装运期限2021-03-19至2021-03-19浏览次数6次运价元/吨联系人： 顾孝飞
-联系电话：15896025008 */
-            //货源名称
-            var start = args.IndexOf("货源名称");
-            var end = args.IndexOf("航线类别");
-            DataSource.Add("title", args.Substring(start, end - start));
-
-            //吨位
-            start = end;
-            //货源名称煤炭航线类别长江-内河所需船型单机货物吨位5700发出港镇江　到达港芜湖　发布时间2021-03-19装运期限2021-03-19至2021-03-19浏览次数6次运价元/吨联系人： 顾孝飞
-            //联系电话：15896025008
-
-        }
-
-        /// <summary>
-        /// 切换成简单模式
-        /// </summary>
-        private void SwitchSimpleModel()
-        {
-            richTextBox1.Text = "";
-        }
-
         /// <summary>
         /// 简单模式
         /// </summary>
@@ -478,22 +456,18 @@ namespace EastWaterway
 
         private void chkSimple_CheckedChanged(object sender, EventArgs e)
         {
-            if (!IsSwitch()) return;
+            //if (!IsSwitch()) return;
             if (chkSimple.Checked)
             {
-                richTextBox2.Visible = true;
-                SwitchSimpleModel();
+                richTextBox2.Visible = btnSave.Visible = true;
+                btnSave.Dock = DockStyle.Fill;
+                button1.Visible = button2.Visible = false;
             }
             else
             {
-                richTextBox2.Visible = false;
-                SwitchStandardModel();
+                richTextBox2.Visible = btnSave.Visible = false;
+                button1.Visible = button2.Visible = true;
             }
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -505,7 +479,17 @@ namespace EastWaterway
         {
             if (richTextBox1.Text == "") { return; }
             DataSource = new JObject();
-            Issue1(richTextBox1.Text);
+
+            //OnSaveNew();
+            if (!InitSave()) return;
+
+            if (!Issue1(richTextBox1.Text)) return;
+
+            if (OnCallSave())
+            {
+                RefreshLately();
+                richTextBox1.Text = "";
+            }
         }
 
         /// <summary>
@@ -517,27 +501,14 @@ namespace EastWaterway
         {
             if (richTextBox1.Text == "") { return; }
             DataSource = new JObject();
-            Issue2(richTextBox1.Text);
-        }
+            if (!InitSave()) return;
+            if (!Issue2(richTextBox1.Text)) return;
 
-        /// <summary>
-        /// 船源信息发布：模式一
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (richTextBox1.Text == "") { return; }
-        }
-
-        /// <summary>
-        /// 船源信息发布：模式二
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (richTextBox1.Text == "") { return; }
+            if (OnCallSave())
+            {
+                RefreshLately();
+                richTextBox1.Text = "";
+            }
         }
 
         /// <summary>
@@ -795,11 +766,6 @@ namespace EastWaterway
             DataSource.Add("h_conter", args.Substring(idx1 + plac, idx2 - idx1 - plac).Trim());
 
             return true;
-        }
-
-        private void chkEdit_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
