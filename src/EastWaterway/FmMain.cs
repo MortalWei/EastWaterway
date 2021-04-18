@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
@@ -54,6 +55,16 @@ namespace EastWaterway
 
         private void tsBtnLogout_Click(object sender, EventArgs e)
         {
+            lock (bLock)
+            {
+                var baseUrl = "http://www.012395.com/e/enews/?enews=exit&ecmsfrom=/e/member/login/";
+
+                var response = ApiClient.Logout(baseUrl);
+
+                groupBox2.Enabled = false;
+                LoginFlag = false;
+                tsBtnLogin.Enabled = true;
+            }
         }
 
         private void Login(string userName, string userPWD)
@@ -62,9 +73,9 @@ namespace EastWaterway
 
             var response = ApiClient.Login(baseUrl, userName, userPWD);
 
-            if (response == "登录失败")
+            if (response == FuncConst.LoginErr)
             {
-                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
+                FuncMsg.Error($"{FuncConst.LoginErr}\r\n{FuncConst.NetworkErr}");
                 return;
             }
 
@@ -78,6 +89,7 @@ namespace EastWaterway
                 if (msg.Equals(SuccessStr))
                 {
                     OpenEditor();
+                    RefreshLately();
                 }
                 else
                 {
@@ -87,9 +99,60 @@ namespace EastWaterway
             }
         }
 
+        /// <summary>
+        /// 刷新我的发布
+        /// </summary>
+        private void RefreshLately()
+        {
+            var baseUrl = "http://www.012395.com/e/DoInfo/ListInfo.php?mid=15";
+            var response = ApiClient.RefreshLately(baseUrl);
+            if (response.Equals(FuncConst.RefreshErr))
+            {
+                FuncMsg.Error($"{FuncConst.RefreshErr}\r\n{FuncConst.NetworkErr}");
+                return;
+            }
+
+            var html = new HtmlAgilityPack.HtmlDocument();
+            html.LoadHtml(response);
+
+            var node = html.DocumentNode.SelectSingleNode("//title");
+
+            if (node != null)
+            {
+                var title = node.InnerText;
+                if (title == FuncConst.ExTitle)
+                {
+                    node = html.DocumentNode.SelectSingleNode("//b");
+                    if (node != null)
+                    {
+                        FuncMsg.Error(node.InnerText);
+                        return;
+                    }
+                }
+                else
+                {
+                    var nodes = html.DocumentNode.SelectNodes("//*[contains(@class,'table_list')]");
+                    var list = new List<ListViewItem>();
+                    listView1.Items.Clear();
+                    foreach (var item in nodes)
+                    {
+                        var tds = item.SelectNodes("tr/td");
+
+                        var ctl = new ListViewItem();
+                        ctl.Text = tds[0].InnerText;
+                        ctl.SubItems.Add(tds[3].InnerText);
+                        list.Add(ctl);
+                        listView1.Items.Add(ctl);
+                    }
+                }
+            }
+        }
+
         private void OpenEditor()
         {
             groupBox2.Enabled = true;
+            tsBtnLogout.Enabled = true;
+            tsBtnLogin.Enabled = false;
             richTextBox1.Focus();
         }
 
@@ -130,9 +193,9 @@ namespace EastWaterway
 
             var response = ApiClient.AddInfo(baseUrl);
 
-            if (response == "添加失败")
+            if (response == FuncConst.AddErr)
             {
-                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
+                FuncMsg.Error($"{FuncConst.AddErr}\r\n{FuncConst.NetworkErr}");
                 return;
             }
 
@@ -159,7 +222,18 @@ namespace EastWaterway
 
             if (IsSuccess(result))
             {
-
+                FuncMsg.Info($"货源信息：[{DataSource["title"].ToString()}]发布成功!");
+                RefreshLately();
+                if (chkSimple.Checked)
+                {
+                    richTextBox2.Visible = true;
+                    SwitchSimpleModel();
+                }
+                else
+                {
+                    richTextBox2.Visible = false;
+                    SwitchStandardModel();
+                }
             }
         }
 
@@ -170,9 +244,9 @@ namespace EastWaterway
         /// <returns></returns>
         private bool IsSuccess(string htmlStr)
         {
-            if (htmlStr == "添加失败")
+            if (htmlStr == FuncConst.AddErr)
             {
-                FuncMsg.Error("添加失败\r\n无法连接到服务器，请检查您的网络是否正常");
+                FuncMsg.Error($"{FuncConst.AddErr}\r\n{FuncConst.NetworkErr}");
                 return false;
             }
 
@@ -182,7 +256,7 @@ namespace EastWaterway
             if (node != null)
             {
                 var title = node.InnerText;
-                if (title == "信息提示")
+                if (title == FuncConst.ExTitle)
                 {
                     node = html.DocumentNode.SelectSingleNode("//b");
                     if (node != null)
@@ -210,7 +284,7 @@ namespace EastWaterway
             if (node != null)
             {
                 var title = node.InnerText;
-                if (title == "信息提示")
+                if (title == FuncConst.ExTitle)
                 {
                     node = html.DocumentNode.SelectSingleNode("//b");
                     var msg = "您的账号在其它地方登录，请重新登录后重新发布";
@@ -374,10 +448,12 @@ namespace EastWaterway
             if (!IsSwitch()) return;
             if (chkSimple.Checked)
             {
+                richTextBox2.Visible = true;
                 SwitchSimpleModel();
             }
             else
             {
+                richTextBox2.Visible = false;
                 SwitchStandardModel();
             }
         }

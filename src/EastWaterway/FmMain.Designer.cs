@@ -37,7 +37,12 @@
             this.toolStripTextBox2 = new System.Windows.Forms.ToolStripTextBox();
             this.tsBtnLogin = new System.Windows.Forms.ToolStripButton();
             this.tsBtnLogout = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.ChName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ChDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -45,9 +50,9 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.chkSimple = new System.Windows.Forms.CheckBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -56,6 +61,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
@@ -69,39 +75,39 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(1568, 50);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(784, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(92, 44);
+            this.toolStripLabel1.Size = new System.Drawing.Size(54, 24);
             this.toolStripLabel1.Text = "用户名:";
             // 
             // toolStripTextBox1
             // 
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
             this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(196, 50);
-            this.toolStripTextBox1.Text = "changjiang2";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(116, 27);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(68, 44);
+            this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
             this.toolStripLabel2.Text = "密码:";
             // 
             // toolStripTextBox2
             // 
+            this.toolStripTextBox2.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
             this.toolStripTextBox2.Name = "toolStripTextBox2";
-            this.toolStripTextBox2.Size = new System.Drawing.Size(196, 50);
-            this.toolStripTextBox2.Text = "owen1216";
+            this.toolStripTextBox2.Size = new System.Drawing.Size(116, 27);
             // 
             // tsBtnLogin
             // 
@@ -109,31 +115,71 @@
             this.tsBtnLogin.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnLogin.Image")));
             this.tsBtnLogin.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnLogin.Name = "tsBtnLogin";
-            this.tsBtnLogin.Size = new System.Drawing.Size(94, 44);
+            this.tsBtnLogin.Size = new System.Drawing.Size(58, 24);
             this.tsBtnLogin.Text = "登录(&L)";
             this.tsBtnLogin.Click += new System.EventHandler(this.tsBtnLogin_Click);
             // 
             // tsBtnLogout
             // 
             this.tsBtnLogout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsBtnLogout.Enabled = false;
             this.tsBtnLogout.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnLogout.Image")));
             this.tsBtnLogout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnLogout.Name = "tsBtnLogout";
-            this.tsBtnLogout.Size = new System.Drawing.Size(102, 44);
+            this.tsBtnLogout.Size = new System.Drawing.Size(62, 24);
             this.tsBtnLogout.Text = "注销(&O)";
             this.tsBtnLogout.Click += new System.EventHandler(this.tsBtnLogout_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(36, 22);
+            this.toolStripButton1.Text = "帮助";
+            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.listView1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Location = new System.Drawing.Point(0, 50);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox1.Location = new System.Drawing.Point(0, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox1.Size = new System.Drawing.Size(400, 1072);
+            this.groupBox1.Size = new System.Drawing.Size(233, 534);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "近期发布信息";
+            this.groupBox1.Text = "我的发布";
+            // 
+            // listView1
+            // 
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ChName,
+            this.ChDate});
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.listView1.HideSelection = false;
+            this.listView1.Location = new System.Drawing.Point(3, 19);
+            this.listView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(227, 512);
+            this.listView1.TabIndex = 0;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // ChName
+            // 
+            this.ChName.Text = "名称";
+            this.ChName.Width = 90;
+            // 
+            // ChDate
+            // 
+            this.ChDate.Text = "发布时间";
+            this.ChDate.Width = 100;
             // 
             // groupBox2
             // 
@@ -141,11 +187,10 @@
             this.groupBox2.Controls.Add(this.panel2);
             this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(400, 50);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
+            this.groupBox2.Enabled = false;
+            this.groupBox2.Location = new System.Drawing.Point(233, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
-            this.groupBox2.Size = new System.Drawing.Size(1168, 1072);
+            this.groupBox2.Size = new System.Drawing.Size(551, 534);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "信息编辑区域";
@@ -153,40 +198,38 @@
             // panel3
             // 
             this.panel3.Controls.Add(this.richTextBox1);
+            this.panel3.Controls.Add(this.richTextBox2);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(6, 94);
-            this.panel3.Margin = new System.Windows.Forms.Padding(6);
+            this.panel3.Location = new System.Drawing.Point(3, 54);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1156, 892);
+            this.panel3.Size = new System.Drawing.Size(545, 430);
             this.panel3.TabIndex = 1;
             // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(6);
+            this.richTextBox1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.richTextBox1.Location = new System.Drawing.Point(94, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(1156, 892);
+            this.richTextBox1.Size = new System.Drawing.Size(451, 430);
             this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "系统测试222\n5000\n测试出发\n测试到达\n散装\n内河\n4.14\n4.14\n7天\n系统测试\n15821352721\n备注阿道夫\n阿道夫ac\n";
+            this.richTextBox1.Text = "";
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnSave);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(6, 986);
-            this.panel2.Margin = new System.Windows.Forms.Padding(6);
+            this.panel2.Location = new System.Drawing.Point(3, 484);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1156, 80);
+            this.panel2.Size = new System.Drawing.Size(545, 47);
             this.panel2.TabIndex = 1;
             // 
             // btnSave
             // 
             this.btnSave.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSave.Location = new System.Drawing.Point(0, 0);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(1156, 80);
+            this.btnSave.Size = new System.Drawing.Size(545, 47);
             this.btnSave.TabIndex = 0;
             this.btnSave.Text = "货 源 信 息 发 布(&S)";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -196,11 +239,10 @@
             // 
             this.panel1.Controls.Add(this.chkSimple);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(6, 34);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6);
+            this.panel1.Location = new System.Drawing.Point(3, 19);
             this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(16, 6, 16, 6);
-            this.panel1.Size = new System.Drawing.Size(1156, 60);
+            this.panel1.Padding = new System.Windows.Forms.Padding(9, 3, 9, 3);
+            this.panel1.Size = new System.Drawing.Size(545, 35);
             this.panel1.TabIndex = 0;
             // 
             // chkSimple
@@ -209,38 +251,37 @@
             this.chkSimple.Checked = true;
             this.chkSimple.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSimple.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkSimple.Location = new System.Drawing.Point(16, 6);
-            this.chkSimple.Margin = new System.Windows.Forms.Padding(6);
+            this.chkSimple.Location = new System.Drawing.Point(9, 3);
             this.chkSimple.Name = "chkSimple";
-            this.chkSimple.Size = new System.Drawing.Size(1124, 48);
+            this.chkSimple.Size = new System.Drawing.Size(527, 29);
             this.chkSimple.TabIndex = 0;
             this.chkSimple.Text = "简洁模式";
             this.chkSimple.UseVisualStyleBackColor = true;
             this.chkSimple.CheckedChanged += new System.EventHandler(this.chkSimple_CheckedChanged);
             // 
-            // toolStripSeparator2
+            // richTextBox2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 50);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(66, 44);
-            this.toolStripButton1.Text = "帮助";
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.richTextBox2.Enabled = false;
+            this.richTextBox2.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(94, 430);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "货源名称\n货物吨位\n出发地(港)\n达到地(港)\n包装形式\n航运类型\n开始时间\n结束时间\n有效期\n联系人\n联系电话\n备注";
             // 
             // FmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1568, 1122);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.toolStrip1);
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "华东水运货源信息发布";
@@ -248,6 +289,7 @@
             this.Shown += new System.EventHandler(this.FmMain_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -277,6 +319,10 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader ChName;
+        private System.Windows.Forms.ColumnHeader ChDate;
+        private System.Windows.Forms.RichTextBox richTextBox2;
     }
 }
 

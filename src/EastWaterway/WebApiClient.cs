@@ -34,21 +34,36 @@ namespace EastWaterway
             var result = Client.PostAsync(url, content).Result;
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
                 return result.Content.ReadAsStringAsync().Result;
-            else
-                return "登陆失败";
+            return FuncConst.LoginErr;
+        }
+
+        /// <summary>
+        /// 刷新我的发布
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public string RefreshLately(string url)
+        {
+            var result = Client.GetAsync(url).Result;
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                return result.Content.ReadAsStringAsync().Result;
+            return FuncConst.RefreshErr;
+        }
+
+        internal object Logout(string baseUrl)
+        {
+            var result = Client.GetAsync(baseUrl).Result;
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                return result.Content.ReadAsStringAsync().Result;
+            return FuncConst.LogoutErr;
         }
 
         public string AddInfo(string url)
         {
             var result = Client.GetAsync(url).Result;
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
                 return result.Content.ReadAsStringAsync().Result;
-            }
-            else
-            {
-                return "添加失败";
-            }
+            return FuncConst.AddErr;
         }
 
         public string SaveInfo(string url, JObject args)
@@ -62,13 +77,8 @@ namespace EastWaterway
             var content = new FormUrlEncodedContent(list);
             var result = Client.PostAsync(url, content).Result;
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
                 return result.Content.ReadAsStringAsync().Result;
-            }
-            else
-            {
-                return "添加失败";
-            }
+            return FuncConst.AddErr;
         }
     }
 }

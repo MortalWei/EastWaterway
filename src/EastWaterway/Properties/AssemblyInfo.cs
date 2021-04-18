@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("EastWaterway")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("货源信息发布工具")]
+[assembly: AssemblyDescription("货源信息发布工具@华东水运网")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EastWaterway")]
+[assembly: AssemblyCompany("华东水运网")]
+[assembly: AssemblyProduct("货源信息发布工具")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
