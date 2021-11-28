@@ -29,5 +29,15 @@
         /// 联系电话
         /// </summary>
         public string Phone { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Intro { get; set; }
+        public string StartYear { get; set; }
+        public string StartMonth { get; set; }
+        public string StartDay { get; set; }
+        public string EndYear { get; set; }
+        public string EndMonth { get; set; }
+        public string EndDay { get; set; }
     }
 }

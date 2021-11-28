@@ -44,6 +44,16 @@ namespace EastAuxiliaryTool
             EditGoods(EnumMode.货源二);
         }
 
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            EditGoods(EnumMode.货源三);
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            EditGoods(EnumMode.货源四);
+        }
+
         /// <summary>
         /// 船源一
         /// </summary>
@@ -154,6 +164,8 @@ namespace EastAuxiliaryTool
             {
                 case EnumMode.货源一:
                 case EnumMode.货源二:
+                case EnumMode.货源三:
+                case EnumMode.货源四:
                     flag = content.Contains("栏目：货源信息");
                     if (!flag)
                     {
